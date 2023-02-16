@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+
+    <title>팀 기록하기</title>
+
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: '/team_list',
+                data: {},
+                success: function (response) {
+                    let rows = response['teams']
+
+                    for(let i=0; i < rows.length; i++) {
+                        let team_name = rows[i]['team']
+                        let team_member = rows[i]['members']
+
+                        let temp_html = `<option value="${team_name}">${team_name}</option>`
+
+                        $('#team_list').append(temp_html)
+                        $('#bonus_team').append(temp_html)
+                        $('#color_team').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function memberPosting() {
+            let name = $('#name').val()
+            let team = $('#team_list').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/member_post',
+                data: {name_give: name, team_give: team},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function teamCreate() {
+            let team_name = $('#team_name').val()
+            let color = $('#color').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/team_create',
+                data: {team_give: team_name, color_give: color},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function bonusPosting() {
+            let bonus_team = $('#bonus_team').val()
+            let bonus = $('#bonus').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/team_bonus_record',
+                data: {bonus_team_give: bonus_team, bonus_give: bonus},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+    </script>
+</head>
+
+<body class="back_color" onload="showClock()">
+<div>
+    <h1 class="mytitle">조 관리 페이지</h1>
+</div>
+<div class="mypost" id="post-team">
+    <h3 class="mytitle">조 생성하기</h3>
+    <div class="input-group mb-3">
+        <span class="input-group-text">조이름</span>
+        <input type="text" class="form-control" id="team_name" placeholder="" aria-label="Username"
+               aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text">색상 선택</label>
+        <select class="form-select" id="color">
+            <option selected>선택...</option>
+            <option value="tomato">빨강</option>
+            <option value="darkorange">주황</option>
+            <option value="gold">노랑</option>
+            <option value="lightgreen">초록</option>
+            <option value="skyblue">파랑</option>
+            <option value="blueviolet">보라</option>
+        </select>
+    </div>
+    <div class="mybtns">
+        <button onclick="teamCreate()" type="button" class="btn btn-dark">입력</button>
+    </div>
+</div>
+<div class="mypost" id="post-member">
+    <h3 class="mytitle">조원 등록하기</h3>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">이름</span>
+        <input type="text" class="form-control" id="name" placeholder="홍길동" aria-label="Username"
+               aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text">팀 선택</label>
+        <select class="form-select" id="team_list">
+            <option selected>선택...</option>
+        </select>
+    </div>
+    <div class="mybtns">
+        <button onclick="memberPosting()" type="button" class="btn btn-dark">입력</button>
+    </div>
+</div>
+<div class="mypost" id="plus-box">
+    <h3 class="mytitle">뒤집기 횟수 추가하기</h3>
+    <div class="input-group mb-3">
+        <label class="input-group-text">조 선택</label>
+        <select class="form-select" id="bonus_team">
+            <option selected>선택...</option>
+        </select>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text">추가 횟수 선택</label>
+        <select class="form-select" id="bonus">
+            <option selected>선택...</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+    </div>
+    <div class="mybtns">
+        <button onclick="bonusPosting()" type="button" class="btn btn-dark">입력</button>
+    </div>
+</div>
+</body>
+
+</html>
