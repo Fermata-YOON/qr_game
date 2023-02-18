@@ -291,7 +291,7 @@ function quiz_listing() {
                                                 <span>Hint: ${hint} ${chapter}절 ${line}절</span>
                                             </div>           
                                             <div>
-                                                <span style="color: red">뒤집기 횟수 4회 획득 가능</span>
+                                                <span style="color: red">뒤집기 횟수 3회 획득 가능</span>
                                             </div>                      
                                         </div>`
                 }
