@@ -31,8 +31,6 @@ function coloring(num) {
         success: function (response) {
             let color = response['color']
 
-            console.log(color)
-
             $('#back_color').css("background-color", color)
         }
     })
@@ -60,6 +58,246 @@ function posting(num) {
         success: function (response) {
             alert(response['msg'])
             window.location.reload()
+
         }
     });
+}
+
+//------------------------------------------------------
+
+function list_coloring(num) {
+    let url = '/color_list?qr_give=' + num
+    let color
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        data: {},
+        async: false,
+        success: function (response) {
+
+            color = response['color']
+
+        }
+    })
+    return color
+}
+
+function qr_listing() {
+    $.ajax({
+        type: 'GET',
+        url: '/total_list',
+        data: {},
+        success: function (response) {
+            let rows = response['list_give']
+
+            for (let j = 0; j < 100; j++) {
+
+                let temp_html = `<tr>
+                                            <th scope="row">${j + 1}</th>
+                                            <td></td>
+                                            <td></td>
+                                         </tr>`
+
+                for (let i = 0; i < rows.length; i++) {
+                    let num = rows[i]['qr_num']
+                    let team = rows[i]['team']
+                    let time = rows[i]['time']
+                    let state = rows[i]['state']
+
+                    if (j + 1 == num && (state == 0 || state == 1)) {
+                        let color = list_coloring(num);
+                        temp_html = `<tr style="background-color: ${color}">
+                                                <th scope="row">${num}</th>
+                                                <td>${team}</td>
+                                                <td>${time}</td>
+                                            </tr>`
+                    }
+                    if (j + 1 == num && state == -1) {
+                        let color = list_coloring(num);
+                        temp_html = `<tr style="background-color: ${color}">
+                                                <th scope="row">${num}</th>
+                                                <td>${team}</td>
+                                                <td>점령완료</td>
+                                            </tr>`
+                    }
+                }
+
+                if (j < 20) {
+                    $('#post_list1').append(temp_html)
+                } else if (j < 40) {
+                    $('#post_list2').append(temp_html)
+                } else if (j < 60) {
+                    $('#post_list3').append(temp_html)
+                } else if (j < 80) {
+                    $('#post_list4').append(temp_html)
+                } else {
+                    $('#post_list5').append(temp_html)
+                }
+            }
+        }
+    })
+}
+
+function team_total_listing() {
+    let name = $('#name').val()
+    let team = $('#team_list').val()
+
+    $.ajax({
+        type: 'GET',
+        url: '/team/list',
+        data: {},
+        success: function (response) {
+            let rows = response['teams']
+            let qrs = response['qrs']
+            var ranks = new Array()
+
+            for (let i = 0; i < rows.length; i++) {
+                let team = rows[i]['team']
+                let bonus = rows[i]['bonus']
+                let color = rows[i]['color']
+                let num = 0
+                let total = 0
+
+                for (let j = 0; j < qrs.length; j++) {
+                    if (qrs[j]['team'] == team) {
+                        if(qrs[j]['state'] == -1){
+                            num++
+                            total++
+                        } else {
+                            total++
+                        }
+                    }
+                }
+
+                var data = new Object()
+
+                    data.team = team
+                    data.count = num
+                    data.total = total
+                    data.bonus = bonus
+                    data.color = color
+
+                    ranks.push(data)
+
+                ranks.sort((a,b) => {
+                    if(a.bonus > b.bonus) return -1;
+                    if(a.bonus < b.bonus) return 1;
+
+                    return 0
+                })
+
+                ranks.sort((a,b) => {
+                    if(a.total > b.total) return -1;
+                    if(a.total < b.total) return 1;
+
+                    return 0
+                })
+
+                ranks.sort((a,b) => {
+                    if(a.count > b.count) return -1;
+                    if(a.count < b.count) return 1;
+
+                    return 0
+                })
+            }
+
+            for(let i=0; i<ranks.length; i++) {
+                let team = ranks[i]['team']
+                let count = ranks[i]['count']
+                let total = ranks[i]['total']
+                let bonus = ranks[i]['bonus']
+                let color = ranks[i]['color']
+                let rank = ''
+
+                if(i==0) {
+                    rank = '1등'
+                } else if(i==1) {
+                    rank = '2등'
+                } else if(i==2) {
+                    rank = '3등'
+                }
+
+                let temp_html = `<tr style="background-color: ${color}">
+                                            <th scope="row">${rank}</th>
+                                            <th scope="row">${team}</th>
+                                            <th scope="row">${count}</th>
+                                            <th scope="row">${total}</th>
+                                            <th scope="row">${bonus}</th>
+                                            <td></td>
+                                            <td></td>
+                                         </tr>`
+
+                $('#team_list').append(temp_html)
+            }
+        }
+    })
+}
+
+function quiz_listing() {
+
+    console.log('quiz_listing')
+
+    $.ajax({
+        type: 'GET',
+        url: '/quiz_list',
+        data: {},
+        success: function (response) {
+            let rows = response['quizs']
+
+            for (let i = 0; i < rows.length; i++) {
+                let sentence = rows[i]['sentence']
+                let book = rows[i]['book']
+                let chapter = rows[i]['chapter']
+                let line = rows[i]['line']
+                let hint = rows[i]['hint']
+                let state = rows[i]['state']
+
+                let temp_html = ''
+
+                console.log(state)
+
+                if (state == 1) {
+
+                    temp_html = `<div class="quizpost" id="post_quiz">
+                                            <div>
+                                                <span style="text-size: 15px">"${sentence}"</span>
+                                            </div>  
+                                            <div>
+                                                <span>hint: ${line}절</span>                                             
+                                            </div>  
+                                            <div>
+                                                <span style="color: red">뒤집기 횟수 10회 획득 가능</span>
+                                            </div>                              
+                                        </div>`
+                } else if (state == 2) {
+                    temp_html = `<div class="quizpost" id="post_quiz">
+                                            <div>
+                                                <span style="text-size: 15px">"${sentence}"</span>
+                                            </div>  
+                                            <div>
+                                                <span>Hint: ${hint} ??절 ${line}절</span>                                               
+                                            </div>  
+                                            <div>
+                                                <span style="color: red">뒤집기 횟수 7회 획득 가능</span>
+                                            </div>                               
+                                        </div>`
+                } else if (state == 3) {
+                    temp_html = `<div class="quizpost" id="post_quiz">
+                                            <div>
+                                                <span style="text-size: 15px">"${sentence}"</span>
+                                            </div>  
+                                            <div>
+                                                <span>Hint: ${hint} ${chapter}절 ${line}절</span>
+                                            </div>           
+                                            <div>
+                                                <span style="color: red">뒤집기 횟수 4회 획득 가능</span>
+                                            </div>                      
+                                        </div>`
+                }
+
+                $('#quiz_now').append(temp_html)
+            }
+        }
+    })
 }

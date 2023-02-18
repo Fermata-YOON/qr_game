@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+
+  <title>성경 퀴즈 등록하기</title>
+
+    <script src="{{url_for('static', filename='quiz.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            quiz_listing();
+            quiz_now_listing();
+        });
+    </script>
+</head>
+
+<body class="back_color">
+<div>
+    <h1 class="mytitle">quiz 관리 페이지</h1>
+</div>
+<div class="quizpost" id="post-team">
+    <h3 class="mytitle">quiz 생성하기</h3>
+    <div class="input-group mb-3">
+        <span class="input-group-text">성경 구절</span>
+        <input type="text" class="form-control" id="sentence" placeholder="" aria-label="Username"
+               aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text">권 선택</label>
+        <select class="form-select" id="book">
+            <option selected>선택...</option>
+            <option value="창세기">창세기</option>
+            <option value="출애굽기">출애굽기</option>
+            <option value="레위기">레위기</option>
+            <option value="민수기">민수기</option>
+            <option value="신명기">신명기</option>
+            <option value="여호수아">여호수아</option>
+            <option value="사사기">사사기</option>
+            <option value="룻기">룻기</option>
+            <option value="사무엘상">사무엘상</option>
+            <option value="사무엘하">사무엘하</option>
+            <option value="열왕기상">열왕기상</option>
+            <option value="열왕기하">열왕기하</option>
+            <option value="역대상">역대상</option>
+            <option value="역대하">역대하</option>
+            <option value="에스라">에스라</option>
+            <option value="느혜미야">느혜미야</option>
+            <option value="에스더">에스더</option>
+            <option value="욥기">욥기</option>
+            <option value="시편">시편</option>
+            <option value="잠언">잠언</option>
+            <option value="전도서">전도서</option>
+            <option value="아가">아가</option>
+            <option value="이사야">이사야</option>
+            <option value="예레미야">예레미야</option>
+            <option value="예레미야애가">예레미야애가</option>
+            <option value="에스겔">에스겔</option>
+            <option value="다니엘">다니엘</option>
+            <option value="호세아">호세아</option>
+            <option value="요엘">요엘</option>
+            <option value="아모스">아모스</option>
+            <option value="오바댜">오바댜</option>
+            <option value="요나">요나</option>
+            <option value="미가">미가</option>
+            <option value="나훔">나훔</option>
+            <option value="하박국">하박국</option>
+            <option value="스바냐">스바냐</option>
+            <option value="학개">학개</option>
+            <option value="스가랴">스가랴</option>
+            <option value="말라기">말라기</option>
+            <option value="마태복음">마태복음</option>
+            <option value="마가복음">마가복음</option>
+            <option value="누가복음">누가복음</option>
+            <option value="요한복음">요한복음</option>
+            <option value="사도행전">사도행전</option>
+            <option value="로마서">로마서</option>
+            <option value="고린도전서">고린도전서</option>
+            <option value="고린도후서">고린도후서</option>
+            <option value="갈라디아서">갈라디아서</option>
+            <option value="에베소서">에베소서</option>
+            <option value="빌립보서">빌립보서</option>
+            <option value="골로새서">골로새서</option>
+            <option value="데살로나가전서">데살로니가전서</option>
+            <option value="데살로니가후서">데살로니가후서</option>
+            <option value="디모데전서">디모데전서</option>
+            <option value="디모데후서">디모데후서</option>
+            <option value="디도서">디도서</option>
+            <option value="빌레몬서">빌레몬서</option>
+            <option value="히브리서">히브리서</option>
+            <option value="야고보서">야고보서</option>
+            <option value="베드로전서">베드로전서</option>
+            <option value="베드로후서">베드로후서</option>
+            <option value="요한일서">요한일서</option>
+            <option value="요한이서">요한이서</option>
+            <option value="요한삼서">요한삼서</option>
+            <option value="유다서">유다서</option>
+            <option value="요한계시록">요한계시록</option>
+        </select>
+    </div>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="chapter" placeholder="숫자만 입력" aria-describedby="basic-addon3">
+      <span class="input-group-text">장</span>
+      <input type="text" class="form-control" id="line" placeholder="숫자만 입력" aria-describedby="basic-addon3">
+      <span class="input-group-text">절</span>
+    </div>
+    <div class="mybtns">
+        <button onclick="quiz_posting()" type="button" class="btn btn-dark">입력</button>
+    </div>
+</div>
+<div>
+    <h3 class="mytitle">현재 보여지는 문제</h3>
+</div>
+<div id="quiz_now">
+</div>
+<div>
+    <h3 class="mytitle">quiz list</h3>
+</div>
+<div id="quiz_list">
+</div>
+
+</body>
+
+</html>

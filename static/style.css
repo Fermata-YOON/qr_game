@@ -5,7 +5,11 @@
 }
 
 .back_color {
-    background-color: skyblue;
+    background-color: whitesmoke;
+}
+
+.back_color_gray {
+    background-color: lightgray;
 }
 
 .mytitle {
@@ -51,6 +55,24 @@
     background-color: white;
 }
 
+.quizpost {
+    width: 95%;
+    max-width: 1500px;
+    margin: 20px auto 0px auto;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 0px gray;
+    background-color: white;
+}
+
+.anspost {
+    width: 95%;
+    max-width: 500px;
+    margin: 20px auto 0px auto;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 0px gray;
+    background-color: white;
+}
+
 .mybtns {
     display: flex;
     flex-direction: row;
@@ -62,4 +84,14 @@
 
 .mybtns > button {
     margin-right: 10px;
+}
+
+.wrap {
+    max-width: 95%px;
+    width: 95%;
+    margin: 20px auto 20px auto;
+}
+
+.done {
+    text-decoration: line-through
 }
