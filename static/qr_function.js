@@ -267,7 +267,7 @@ function quiz_listing() {
                                                 <span>hint: ${line}절</span>                                             
                                             </div>  
                                             <div>
-                                                <span style="color: red">뒤집기 횟수 10회 획득 가능</span>
+                                                <span style="color: red">재점령 횟수 10회 획득 가능</span>
                                             </div>                              
                                         </div>`
                 } else if (state == 2) {
@@ -279,7 +279,7 @@ function quiz_listing() {
                                                 <span>Hint: ${hint} ??절 ${line}절</span>                                               
                                             </div>  
                                             <div>
-                                                <span style="color: red">뒤집기 횟수 7회 획득 가능</span>
+                                                <span style="color: red">재점령 횟수 7회 획득 가능</span>
                                             </div>                               
                                         </div>`
                 } else if (state == 3) {
@@ -291,7 +291,7 @@ function quiz_listing() {
                                                 <span>Hint: ${hint} ${chapter}절 ${line}절</span>
                                             </div>           
                                             <div>
-                                                <span style="color: red">뒤집기 횟수 3회 획득 가능</span>
+                                                <span style="color: red">재점령 횟수 3회 획득 가능</span>
                                             </div>                      
                                         </div>`
                 }
