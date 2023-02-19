@@ -210,9 +210,9 @@ def qr_record():
     elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() > 1200:
         db.qr_list.update_one({'qr_num': int(num_receive)}, {'$set': {'state': -1}})
         return jsonify({'msg': '이 QR은 점령 불가능 합니다'})
-    elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() < 900 and qr_arr[0]['state'] == 0:
+    elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() < 600 and qr_arr[0]['state'] == 0:
         return jsonify({'msg': '지금은 점령할 수 없습니다'})
-    elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() < 600 and qr_arr[0]['state'] == 1:
+    elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() < 300 and qr_arr[0]['state'] == 1:
         return jsonify({'msg': '지금은 점령할 수 없습니다'})
     elif name_receive in qr_arr[0]['names']:
         return jsonify({'msg': '이전에 점령을 한 적이 있습니다'})
