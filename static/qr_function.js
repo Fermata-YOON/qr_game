@@ -93,11 +93,13 @@ function qr_listing() {
 
             for (let j = 0; j < 100; j++) {
 
-                let temp_html = `<tr>
-                                            <th scope="row">${j + 1}</th>
-                                            <td></td>
-                                            <td></td>
-                                         </tr>`
+                let temp_html = `<div class="col-md-1">
+                                    <div class="card" style="max-width: 20rem;">
+                                      <div class="card-body">
+                                        ${j+1}
+                                      </div>
+                                    </div>
+                                  </div>`
 
                 for (let i = 0; i < rows.length; i++) {
                     let num = rows[i]['qr_num']
@@ -107,35 +109,26 @@ function qr_listing() {
 
                     if (j + 1 == num && (state == 0 || state == 1)) {
                         let color = list_coloring(num);
-                        temp_html = `<tr style="background-color: ${color}">
-                                                <th scope="row">${num}</th>
-                                                <td>${team}</td>
-                                                <td>${time}</td>
-                                            </tr>`
-                    }
-                    if (j + 1 == num && state == -1) {
+                        temp_html = `<div class="col-md-1">
+                                        <div class="card" style="max-width: 16rem;  background-color: ${color}">
+                                          <div class="card-body">
+                                            ${j + 1}: ${time}
+                                          </div>
+                                        </div>
+                                      </div>`
+                    } else if (j + 1 == num && state == -1) {
                         let color = list_coloring(num);
-                        temp_html = `<tr style="background-color: ${color}">
-                                                <th scope="row">${num}</th>
-                                                <td>${team}</td>
-                                                <td>점령완료</td>
-                                            </tr>`
+                        temp_html = `<div class="col-md-1">
+                                        <div class="card" style="max-width: 16rem;  background-color: ${color}">
+                                          <div class="card-body">
+                                            ${j + 1}: 점령완료
+                                          </div>
+                                        </div>
+                                      </div>`
                     }
                 }
 
-                if (j < 17) {
-                    $('#post_list1').append(temp_html)
-                } else if (j < 34) {
-                    $('#post_list2').append(temp_html)
-                } else if (j < 51) {
-                    $('#post_list3').append(temp_html)
-                } else if (j < 68) {
-                    $('#post_list4').append(temp_html)
-                } else if (j <85) {
-                    $('#post_list5').append(temp_html)
-                } else {
-                    $('#post_list6').append(temp_html)
-                }
+                $('#post_list').append(temp_html)
             }
         }
     })
@@ -190,18 +183,20 @@ function team_total_listing() {
                 })
 
                 ranks.sort((a,b) => {
+                    if(a.count > b.count) return -1;
+                    if(a.count < b.count) return 1;
+
+                    return 0
+                })
+
+                ranks.sort((a,b) => {
                     if(a.total > b.total) return -1;
                     if(a.total < b.total) return 1;
 
                     return 0
                 })
 
-                ranks.sort((a,b) => {
-                    if(a.count > b.count) return -1;
-                    if(a.count < b.count) return 1;
 
-                    return 0
-                })
             }
 
             for(let i=0; i<ranks.length; i++) {
@@ -213,21 +208,19 @@ function team_total_listing() {
                 let rank = ''
 
                 if(i==0) {
-                    rank = '1등'
+                    rank = '🥇'
                 } else if(i==1) {
-                    rank = '2등'
+                    rank = '🥈'
                 } else if(i==2) {
-                    rank = '3등'
+                    rank = '🥉'
                 }
 
                 let temp_html = `<tr style="background-color: ${color}">
                                             <th scope="row">${rank}</th>
                                             <th scope="row">${team}</th>
-                                            <th scope="row">${count}</th>
                                             <th scope="row">${total}</th>
+                                            <th scope="row">${count}</th>                                        
                                             <th scope="row">${bonus}</th>
-                                            <td></td>
-                                            <td></td>
                                          </tr>`
 
                 $('#team_list').append(temp_html)
@@ -263,7 +256,7 @@ function quiz_listing() {
 
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
-                                                <span style="text-size: 15px">"${sentence}"</span>
+                                                <span>"${sentence}"</span>
                                             </div>  
                                             <div>
                                                 <span>hint: ${line}절</span>                                             
@@ -275,7 +268,7 @@ function quiz_listing() {
                 } else if (state == 2) {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
-                                                <span style="text-size: 15px">"${sentence}"</span>
+                                                <span>"${sentence}"</span>
                                             </div>  
                                             <div>
                                                 <span>Hint: ${hint} ??절 ${line}절</span>                                               
@@ -287,7 +280,7 @@ function quiz_listing() {
                 } else if (state == 3) {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
-                                                <span style="text-size: 15px">"${sentence}"</span>
+                                                <span>"${sentence}"</span>
                                             </div>  
                                             <div>
                                                 <span>Hint: ${hint} ${chapter}절 ${line}절</span>
