@@ -123,16 +123,18 @@ function qr_listing() {
                     }
                 }
 
-                if (j < 20) {
+                if (j < 17) {
                     $('#post_list1').append(temp_html)
-                } else if (j < 40) {
+                } else if (j < 34) {
                     $('#post_list2').append(temp_html)
-                } else if (j < 60) {
+                } else if (j < 51) {
                     $('#post_list3').append(temp_html)
-                } else if (j < 80) {
+                } else if (j < 68) {
                     $('#post_list4').append(temp_html)
-                } else {
+                } else if (j <85) {
                     $('#post_list5').append(temp_html)
+                } else {
+                    $('#post_list6').append(temp_html)
                 }
             }
         }
