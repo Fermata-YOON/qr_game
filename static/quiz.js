@@ -8,6 +8,7 @@ function quiz_listing() {
 
             for (let i = 0; i < rows.length; i++) {
                 let sentence = rows[i]['sentence']
+                let original = rows[i]['original']
                 let book = rows[i]['book']
                 let chapter = rows[i]['chapter']
                 let line = rows[i]['line']
@@ -19,32 +20,30 @@ function quiz_listing() {
                 if (state == -1 || state >= 1) {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div class="done">
-                                                <span>${sentence}</span>
+                                                <span>${original}</span>
                                             </div>
                                             <div class="done">
                                                 <span>${book}</span>
                                                 <span>${chapter}장</span>
                                                 <span>${line}절</span>
                                             </div>
-                                            <div class="done">
-                                                <span>${hint}</span>
-                                            </div>
                                             <div>
                                                 <button onclick="del_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">삭제하기</button>
+                                                <button onclick="set_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">다시풀기</button>
                                             </div>
                                         </div>`
                 } else {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
-                                                <span>${sentence}</span>
+                                                <span style="color: red">${original}</span>
+                                            </div>
+                                            <div>
+                                                <span style="color: gray">${sentence}</span>
                                             </div>
                                             <div>
                                                 <span>${book}</span>
                                                 <span>${chapter}장</span>
                                                 <span>${line}절</span>
-                                            </div>
-                                            <div>
-                                                <span>${hint}</span>
                                             </div>
                                             <div>
                                                 <button onclick="quiz_show('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">보여주기</button>
@@ -69,6 +68,7 @@ function quiz_now_listing() {
 
             for (let i = 0; i < rows.length; i++) {
                 let sentence = rows[i]['sentence']
+                let original = rows[i]['original']
                 let book = rows[i]['book']
                 let chapter = rows[i]['chapter']
                 let line = rows[i]['line']
@@ -83,15 +83,14 @@ function quiz_now_listing() {
                                                 <span>${sentence}</span>
                                             </div>
                                             <div>
+                                                <span>${original}</span>
+                                            </div>
+                                            <div>
                                                 <span>${book}</span>
                                                 <span>${chapter}장</span>
                                                 <span>${line}절</span>
                                             </div>
-                                            <div>
-                                                <span>${hint}</span>
-                                            </div>
-                                            <button onclick="done_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">완료하기</button>
-                                            <button onclick="show_hint('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">힌트공개</button>
+                                            <button onclick="done_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">완료하기</button>                                          
                                         </div>`
                 }
 
@@ -155,10 +154,10 @@ function done_quiz(book, chapter, line) {
     });
 }
 
-function show_hint(book, chapter, line) {
+function set_quiz(book, chapter, line) {
     $.ajax({
         type: 'POST',
-        url: '/quiz/hint',
+        url: '/quiz/set',
         data: {book_give: book, chapter_give: chapter, line_give: line},
         success: function (response) {
             alert(response['msg'])

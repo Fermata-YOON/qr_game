@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_restx import Resource, Api
 app = Flask(__name__)
 api = Api(app)
+import random
 
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://test:test1234@cluster0.enxxbxd.mongodb.net/Cluster0?retryWrites=true&w=majority')
@@ -16,6 +17,7 @@ def check_team(name):
         return 0
     else:
         return check[0]['team']
+
 
 @app.route('/main')
 def home():
@@ -94,6 +96,15 @@ def quiz_post():
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
 
+    rand_num = [i for i in range(len(sentence_receive))]
+
+    random.shuffle(rand_num)
+
+    rand_sentence = ''
+
+    for i in rand_num:
+        rand_sentence += sentence_receive[i]
+
     if len(list(db.quizs.find({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'_id': False}))) != 0:
         return jsonify({'msg': '이미 등록된 구절입니다'})
 
@@ -167,11 +178,12 @@ def quiz_post():
     }
 
     doc = {
-        'sentence': sentence_receive,
+        'sentence': rand_sentence,
+        'original': sentence_receive,
         'book': book_receive,
         'chapter': chapter_receive,
         'line': line_receive,
-        'hint': book_list[book_receive],
+        #'hint': book_list[book_receive],
         'state': 0
     }
 
@@ -309,15 +321,15 @@ def done_quiz():
 
     return jsonify({'msg': '문제를 완료처리 합니다'})
 
-@app.route("/quiz/hint", methods=['POST'])
-def show_hint():
+@app.route("/quiz/set", methods=['POST'])
+def set_quiz():
     book_receive = request.form['book_give']
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
 
-    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$inc': {'state': 1}})
+    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'state': 0}})
 
-    return jsonify({'msg': '힌트를 공개합니다'})
+    return jsonify({'msg': '문제를 풀지 않음으로 설정합니다'})
 
 @app.route("/quiz/check/answer", methods=['POST'])
 def check_answer():
@@ -331,10 +343,12 @@ def check_answer():
     if len(ans) > 0:
         if ans[0]['state'] == 1:
             db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 10}})
+            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$inc': {'state': 1}})
         elif ans[0]['state'] == 2:
             db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 7}})
+            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$inc': {'state': 1}})
         elif ans[0]['state'] == 3:
-            db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 3}})
+            db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 4}})
 
         return jsonify({'msg': '정답입니다'})
     else:

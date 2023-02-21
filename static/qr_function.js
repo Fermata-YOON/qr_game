@@ -257,11 +257,7 @@ function quiz_listing() {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
                                                 <span>"${sentence}"</span>
-                                            </div>  
-                                            <div>
-                                                <span>hint: ${line}절</span>                                             
-                                            </div>  
-                                            <div>
+                                                <p></p>
                                                 <span style="color: red">재점령 횟수 10회 획득 가능</span>
                                             </div>                              
                                         </div>`
@@ -269,11 +265,7 @@ function quiz_listing() {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
                                                 <span>"${sentence}"</span>
-                                            </div>  
-                                            <div>
-                                                <span>Hint: ${hint} ??절 ${line}절</span>                                               
-                                            </div>  
-                                            <div>
+                                                <p></p>
                                                 <span style="color: red">재점령 횟수 7회 획득 가능</span>
                                             </div>                               
                                         </div>`
@@ -281,12 +273,8 @@ function quiz_listing() {
                     temp_html = `<div class="quizpost" id="post_quiz">
                                             <div>
                                                 <span>"${sentence}"</span>
-                                            </div>  
-                                            <div>
-                                                <span>Hint: ${hint} ${chapter}절 ${line}절</span>
-                                            </div>           
-                                            <div>
-                                                <span style="color: red">재점령 횟수 3회 획득 가능</span>
+                                                <p></p>
+                                                <span style="color: red">재점령 횟수 4회 획득 가능</span>
                                             </div>                      
                                         </div>`
                 }
