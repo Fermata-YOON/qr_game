@@ -18,6 +18,7 @@ def check_team(name):
     else:
         return check[0]['team']
 
+jesus = rand_drop = first_drop = 1
 
 @app.route('/main')
 def home():
@@ -42,6 +43,27 @@ def quiz():
 @app.route('/quiz/answer/365823')
 def ans():
     return render_template('answer.html')
+
+@app.route('/action/jesus')
+def jesus():
+    global jesus
+    if jesus == 0:
+        return render_template('action/done.html')
+    return render_template('action/jesus.html')
+
+@app.route('/action/drop/first')
+def first_drop():
+    global first_drop
+    if first_drop == 0:
+        return render_template('action/done.html')
+    return render_template('action/first_drop.html')
+
+@app.route('/action/drop/random')
+def random_drop():
+    global rand_drop
+    if rand_drop == 0:
+        return render_template('action/done.html')
+    return render_template('action/random_drop.html')
 
 @app.route('/team_create', methods=['POST'])
 def team_post():
@@ -75,10 +97,14 @@ def member_post():
             return jsonify({'msg': '이미 등록된 이름입니다'})
 
         else:
-            #db.teams.find({'team': team_receive}, {'_id': False})
             db.teams.update_one({'team': team_receive}, {"$push": {'members': name_receive}})
 
+            if name_receive == '예수님':
+                global jesus
+                jesus = 0
+
             return jsonify({'msg': '기록 완료'})
+
 
 @app.route("/team_bonus_record", methods=["POST"])
 def bonus_post():
@@ -108,88 +134,39 @@ def quiz_post():
     if len(list(db.quizs.find({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'_id': False}))) != 0:
         return jsonify({'msg': '이미 등록된 구절입니다'})
 
-    book_list = {
-        '창세기': 'ㅊ**',
-        '출애굽기': 'ㅊ***',
-        '레위기':'ㄹ**',
-        '민수기': 'ㅁ**',
-        '신명기': 'ㅅ**',
-        '여호수아': 'ㅇ***',
-        '사사기': 'ㅅ**',
-        '룻기': 'ㄹ*',
-        '사무엘상': 'ㅅ**ㅅ',
-        '사무엘하': 'ㅅ**ㅎ',
-        '열왕기상': 'ㅇ**ㅅ',
-        '열왕기하': 'ㅇ**ㅎ',
-        '역대상': 'ㅇ*ㅅ',
-        '역대하': 'ㅇ*ㅎ',
-        '에스라': 'ㅇ*ㄹ',
-        '느혜미야': 'ㄴ**ㅇ',
-        '에스더': 'ㅇ*ㄷ',
-        '욥기': 'ㅇ*',
-        '시편': 'ㅅ*',
-        '잠언': 'ㅈ*',
-        '전도서': 'ㅈ**',
-        '아가': '*ㄱ',
-        '이사야': 'ㅇ*ㅇ',
-        '예레미야': 'ㅇ**ㅇ',
-        '예레미야애가': '****ㅇㄱ',
-        '에스겔': 'ㅇ*ㄱ',
-        '다니엘': 'ㄷ**',
-        '호세아': 'ㅎ**',
-        '요엘': 'ㅇ*',
-        '아모스': 'ㅇ*ㅅ',
-        '오바댜': 'ㅇ*ㄷ',
-        '요나': '*ㄴ',
-        '미가': 'ㅁ*',
-        '나훔': '*ㅎ',
-        '하박국': 'ㅎ**',
-        '스바냐': '*ㅂ*',
-        '학개': 'ㅎ*',
-        '스가랴': '**ㄹ',
-        '말라기': 'ㅁ**',
-        '마태복음': 'ㅁ***',
-        '마가복음': 'ㅁ***',
-        '누가복음': 'ㄴ***',
-        '요한복음': 'ㅇ***',
-        '사도행전': '*ㄷㅎ*',
-        '로마서': 'ㄹ**',
-        '고린도전서': '***ㅈㅅ',
-        '고린도후서': '***ㅎㅅ',
-        '갈라디아서': 'ㄱㄹ***',
-        '에베소서': 'ㅇ**ㅅ',
-        '빌립보서': '*ㄹㅂ*',
-        '골로세서': 'ㄱ**ㅅ',
-        '데살로니가전서': '*****ㅈㅅ',
-        '데살로니가후서': '*****ㅎㅅ',
-        '디모데전서': 'ㄷ***ㅅ',
-        '디모데후서': '**ㄷㅎ*',
-        '디도서': 'ㄷ**',
-        '빌레몬서': 'ㅂ**ㅅ',
-        '히브리서': 'ㅎ***',
-        '야고보서': 'ㅇ**ㅅ',
-        '베드로전서': '**ㄹㅈ*',
-        '베드로후서': 'ㅂㄷ***',
-        '요한일서': 'ㅇ*ㅇ*',
-        '요한이서': 'ㅇ*ㅇ*',
-        '요한삼서': 'ㅇ*ㅅ*',
-        '유다서': 'ㅇ**',
-        '요한계시록': '**ㄱㅅ*'
-    }
-
     doc = {
         'sentence': rand_sentence,
         'original': sentence_receive,
         'book': book_receive,
         'chapter': chapter_receive,
         'line': line_receive,
-        #'hint': book_list[book_receive],
-        'state': 0
+        'state': 0,
+        'time': 0
     }
 
     db.quizs.insert_one(doc)
 
     return jsonify({'msg': '퀴즈 등록 완료'})
+
+@app.route("/quiz/mix", methods=["POST"])
+def quiz_mix():
+    sentence_receive = request.form['sentence_give']
+    book_receive = request.form['book_give']
+    chapter_receive = int(request.form['chapter_give'])
+    line_receive = int(request.form['line_give'])
+
+    rand_num = [i for i in range(len(sentence_receive))]
+
+    random.shuffle(rand_num)
+
+    rand_sentence = ''
+
+    for i in rand_num:
+        rand_sentence += sentence_receive[i]
+
+    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'sentence': rand_sentence}})
+
+    return jsonify({'msg': '본문 섞기 완료'})
 
 @app.route("/qr_record", methods=["POST"])
 def qr_record():
@@ -219,6 +196,11 @@ def qr_record():
         return jsonify({'msg': '점령 완료'})
     elif team == qr_arr[0]['team']:
         return jsonify({'msg': '이미 점령중 입니다'})
+    elif qr_arr[0]['time'] == '점령해제':
+        if name_receive in qr_arr[0]['names']:
+            return jsonify({'msg': '이전에 점령을 한 적이 있습니다'})
+        db.qr_list.update_one({'qr_num': int(num_receive)}, {"$push": {'names': name_receive}, '$set': {'time': now, 'team': team, 'state': 1}})
+        return jsonify({'msg': '점령 완료'})
     elif (datetime.strptime(now, '%H:%M') - datetime.strptime(qr_arr[0]['time'], '%H:%M')).total_seconds() > 1200:
         db.qr_list.update_one({'qr_num': int(num_receive)}, {'$set': {'state': -1}})
         return jsonify({'msg': '이 QR은 점령 불가능 합니다'})
@@ -264,7 +246,7 @@ def list_get():
     now = datetime.now().strftime('%H:%M')
 
     for i in range(len(list_info)):
-        if list_info[i]['state'] != -1:
+        if list_info[i]['state'] != -1 and list_info[i]['time'] != '점령해제':
             if (datetime.strptime(now, '%H:%M') - datetime.strptime(list_info[i]['time'], '%H:%M')).total_seconds() > 1200:
                 db.qr_list.update_one({'qr_num': int(list_info[i]['qr_num'])}, {'$set': {'state': -1}})
 
@@ -282,8 +264,11 @@ def color_get():
 
     if len(qr_info) > 0:
         team = qr_info[0]['team']
-        color_list = list(db.teams.find({'team': team}, {'_id': False}))
-        color = color_list[0]['color']
+        if team == '점령해제':
+            return jsonify({'color': 'white'})
+        else:
+            color_list = list(db.teams.find({'team': team}, {'_id': False}))
+            color = color_list[0]['color']
 
         return jsonify({'color': color})
     else:
@@ -301,6 +286,8 @@ def del_quiz():
 
 @app.route("/quiz/show", methods=['POST'])
 def show_quiz():
+    now = datetime.now().strftime('%H:%M')
+
     book_receive = request.form['book_give']
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
@@ -308,7 +295,8 @@ def show_quiz():
     if len(list(db.quizs.find({'state': {'$gte': 1}}))) >= 1:
         return jsonify({'msg': '이미 진행중인 문제가 있습니다'})
 
-    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'state': 1}})
+    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive},
+                        {'$set': {'state': 1, 'time': now}})
 
     return jsonify({'msg': '문제를 공개합니다'})
 @app.route("/quiz/done", methods=['POST'])
@@ -317,7 +305,8 @@ def done_quiz():
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
 
-    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'state': -1}})
+    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive},
+                        {'$set': {'state': -1}})
 
     return jsonify({'msg': '문제를 완료처리 합니다'})
 
@@ -327,9 +316,37 @@ def set_quiz():
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
 
-    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'state': 0}})
+    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive},
+                        {'$set': {'state': 0, 'time': ''}})
 
     return jsonify({'msg': '문제를 풀지 않음으로 설정합니다'})
+
+def auto_quiz():
+    print('operate auto quiz')
+
+    now = datetime.now().strftime('%H:%M')
+
+    quiz_now = list(db.quizs.find({'state': {'$gte': 1}}, {'_id': False}))
+
+    if len(quiz_now) > 0:
+
+        if (datetime.strptime(now, '%H:%M') - datetime.strptime(quiz_now[0]['time'], '%H:%M')).total_seconds() > 600:
+            db.quizs.update_one(
+                {'book': quiz_now[0]['book'], 'chapter': quiz_now[0]['chapter'], 'line': quiz_now[0]['line']},
+                {'$set': {'state': -1, 'time': ''}})
+
+            quiz_list = list(db.quizs.find({'state': 0}, {'_id': False}))
+
+            num = random.randint(0, len(quiz_list)-1)
+
+            print(num)
+
+            db.quizs.update_one(
+                {'book': quiz_list[num]['book'], 'chapter': quiz_list[num]['chapter'], 'line': quiz_list[num]['line']},
+                {'$set': {'state': 1, 'time': now}})
+
+            print('operate quiz update')
+
 
 @app.route("/quiz/check/answer", methods=['POST'])
 def check_answer():
@@ -338,15 +355,18 @@ def check_answer():
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
 
-    ans = list(db.quizs.find({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive, 'state': {'$gte': 1}}))
+    ans = list(db.quizs.find(
+        {'book': book_receive, 'chapter': chapter_receive, 'line': line_receive, 'state': {'$gte': 1}}))
 
     if len(ans) > 0:
         if ans[0]['state'] == 1:
             db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 10}})
-            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$inc': {'state': 1}})
+            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive},
+                                {'$inc': {'state': 1}})
         elif ans[0]['state'] == 2:
             db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 7}})
-            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$inc': {'state': 1}})
+            db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive},
+                                {'$inc': {'state': 1}})
         elif ans[0]['state'] == 3:
             db.teams.update_one({'team': team_receive}, {'$inc': {'bonus': 4}})
 
@@ -357,6 +377,7 @@ def check_answer():
 
 @app.route("/quiz_list", methods=["GET"])
 def quiz_get():
+    auto_quiz()
     quizs = list(db.quizs.find({}, {'_id': False}))
 
     return jsonify({'quizs': quizs})
@@ -367,15 +388,47 @@ def reset_team():
 
     return jsonify({'msg': '팀 초기화 완료'})
 
+@app.route("/reset/bonus", methods=["POST"])
+def reset_bonus():
+    db.teams.update_many({}, {'$set': {'bonus': 0}})
+
+    return jsonify({'msg': '재점령 횟수 초기화 완료'})
+
 @app.route("/reset/qr", methods=["POST"])
 def reset_qr():
     db.qr_list.drop()
 
     return jsonify({'msg': 'qr 초기화 완료'})
 
+@app.route("/drop/first", methods=["POST"])
+def drop_first():
+    team_receive = request.form['team_give']
+
+    for i in range(5):
+        db.qr_list.update_one({'team': team_receive}, {'$set': {'team': '점령해제', 'time': '점령해제', 'state': 0}})
+
+    global first_drop
+    first_drop = 0
+
+    return jsonify({'msg': '1등이 점령중인 5개의 QR 점령이 풀립니다'})
+
+@app.route("/drop/random", methods=["POST"])
+def drop_random():
+
+    num = random.sample(range(1, 100), 20)
+
+    for i in num:
+        if len(list(db.qr_list.find({'qr_num': i}, {'_id': False}))) > 0:
+            db.qr_list.update_one({'qr_num': i}, {'$set': {'team': '점령해제', 'time': '점령해제', 'state': 0}})
+
+    global rand_drop
+    rand_drop = 0
+
+    return jsonify({'msg': '점령중인 QR 중 최대 20개가 점령이 해제됩니다'})
+
 @app.route("/reset/quiz", methods=["POST"])
 def reset_quiz():
-    db.quizs.drop()
+    db.quizs.update_many({}, {'$set': {'state': 0, 'time': ''}})
 
     return jsonify({'msg': 'quiz 초기화 완료'})
 

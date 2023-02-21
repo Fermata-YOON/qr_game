@@ -57,6 +57,21 @@
                 }
             });
         }
+
+        function reset_bonus() {
+
+            $.ajax({
+                type: 'POST',
+                url: '/reset/bonus',
+                data: {},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+
     </script>
 </head>
 
@@ -64,19 +79,25 @@
 <div>
     <h1 class="mytitle">admin page</h1>
 </div>
-<div class="mypost" id="post-team">
+<div class="mypost">
     <h3 class="mytitle">조 데이터 초기화</h3>
     <div class="mybtns">
         <button onclick="reset_team()" type="button" class="btn btn-dark">초기화 하기</button>
     </div>
 </div>
-<div class="mypost" id="post-member">
+<div class="mypost">
+    <h3 class="mytitle">재점령 횟수 초기화</h3>
+    <div class="mybtns">
+        <button onclick="reset_bonus()" type="button" class="btn btn-dark">초기화 하기</button>
+    </div>
+</div>
+<div class="mypost">
     <h3 class="mytitle">qr 데이터 초기화</h3>
     <div class="mybtns">
         <button onclick="reset_qr()" type="button" class="btn btn-dark">초기화 하기</button>
     </div>
 </div>
-<div class="mypost" id="plus-box">
+<div class="mypost">
     <h3 class="mytitle">quiz 데이터 초기화</h3>
     <div class="mybtns">
         <button onclick="reset_quiz()" type="button" class="btn btn-dark">초기화 하기</button>

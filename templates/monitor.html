@@ -15,12 +15,13 @@
     <title>진행 현황판</title>
 
     <script src="{{url_for('static', filename='qr_function.js')}}"></script>
+    <script src="{{url_for('static', filename='quiz.js')}}"></script>
     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
     <script>
         $(document).ready(function () {
-            quiz_listing();
+            quiz_now_show();
             team_total_listing();
             qr_listing();
             setTimeout("location.reload()", 60000)
