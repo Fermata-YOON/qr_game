@@ -11,6 +11,8 @@ db = client.dbsparta
 from datetime import datetime, timedelta
 now = datetime.now()
 
+import hgtk
+
 def check_team(name):
     check = list(db.teams.find({'members': name}, {'_id': False, 'members': False, 'bonus': False}))
     if len(check) == 0:
@@ -135,21 +137,20 @@ def quiz_post():
     book_receive = request.form['book_give']
     chapter_receive = int(request.form['chapter_give'])
     line_receive = int(request.form['line_give'])
+    first_list = []
 
-    rand_num = [i for i in range(len(sentence_receive))]
+    for i in range(len(sentence_receive)):
+        if sentence_receive[i] == ' ':
+            first_list.append('')
+        else: first_list.append(hgtk.letter.decompose(sentence_receive[i])[0])
 
-    random.shuffle(rand_num)
-
-    rand_sentence = ''
-
-    for i in rand_num:
-        rand_sentence += sentence_receive[i]
+    first_char = ''.join(first_list)
 
     if len(list(db.quizs.find({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'_id': False}))) != 0:
         return jsonify({'msg': '이미 등록된 구절입니다'})
 
     doc = {
-        'sentence': rand_sentence,
+        'sentence': first_char,
         'original': sentence_receive,
         'book': book_receive,
         'chapter': chapter_receive,
@@ -161,26 +162,6 @@ def quiz_post():
     db.quizs.insert_one(doc)
 
     return jsonify({'msg': '퀴즈 등록 완료'})
-
-@app.route("/quiz/mix", methods=["POST"])
-def quiz_mix():
-    sentence_receive = request.form['sentence_give']
-    book_receive = request.form['book_give']
-    chapter_receive = int(request.form['chapter_give'])
-    line_receive = int(request.form['line_give'])
-
-    rand_num = [i for i in range(len(sentence_receive))]
-
-    random.shuffle(rand_num)
-
-    rand_sentence = ''
-
-    for i in rand_num:
-        rand_sentence += sentence_receive[i]
-
-    db.quizs.update_one({'book': book_receive, 'chapter': chapter_receive, 'line': line_receive}, {'$set': {'sentence': rand_sentence}})
-
-    return jsonify({'msg': '본문 섞기 완료'})
 
 @app.route("/qr_record", methods=["POST"])
 def qr_record():

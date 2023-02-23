@@ -27,7 +27,6 @@ function quiz_listing() {
                                                 <span>${line}절</span>
                                             </div>
                                             <div>
-                                                <button onclick="quiz_mix('${sentence}', '${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">본문섞기</button>
                                                 <button onclick="del_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">삭제하기</button>
                                                 <button onclick="set_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">다시풀기</button>
                                             </div>
@@ -45,8 +44,7 @@ function quiz_listing() {
                                                 <span>${chapter}장</span>
                                                 <span>${line}절</span>
                                             </div>
-                                            <div>
-                                                <button onclick="quiz_mix('${sentence}', '${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">본문섞기</button>
+                                            <div>                                               
                                                 <button onclick="quiz_show('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">보여주기</button>
                                                 <button onclick="del_quiz('${book}', ${chapter}, ${line})" type="button" class="btn btn-outline-primary">삭제하기</button>
                                             </div>
@@ -135,18 +133,6 @@ function quiz_show(book, chapter, line) {
         type: 'POST',
         url: '/quiz/show',
         data: {book_give: book, chapter_give: chapter, line_give: line},
-        success: function (response) {
-            alert(response['msg'])
-            window.location.reload()
-        }
-    });
-}
-
-function quiz_mix(sentence, book, chapter, line) {
-    $.ajax({
-        type: 'POST',
-        url: '/quiz/mix',
-        data: {sentence_give: sentence, book_give: book, chapter_give: chapter, line_give: line},
         success: function (response) {
             alert(response['msg'])
             window.location.reload()
