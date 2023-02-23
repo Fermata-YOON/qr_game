@@ -105,3 +105,32 @@ function first_drop(team) {
     });
 }
 
+function get_5_bonus() {
+    let bonus_team = $('#bonus_team').val()
+    let bonus = 5
+
+    $.ajax({
+        type: 'POST',
+        url: '/team_bonus_get',
+        data: {bonus_team_give: bonus_team, bonus_give: bonus},
+        success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+        }
+    });
+}
+
+function drop_5_bonus() {
+    let bonus_team = $('#bonus_team').val()
+    let bonus = -5
+
+    $.ajax({
+        type: 'POST',
+        url: '/team_bonus_drop',
+        data: {bonus_team_give: bonus_team, bonus_give: bonus},
+        success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+        }
+    });
+}

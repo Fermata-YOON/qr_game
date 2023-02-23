@@ -18,7 +18,7 @@ def check_team(name):
     else:
         return check[0]['team']
 
-jesus = rand_drop = first_drop = 1
+jesus = rand_drop = first_drop = get_bonus = drop_bonus = 1
 
 @app.route('/main')
 def home():
@@ -44,26 +44,40 @@ def quiz():
 def ans():
     return render_template('answer.html')
 
-@app.route('/action/jesus')
+@app.route('/action/jesus/4589')
 def jesus():
     global jesus
     if jesus == 0:
         return render_template('action/done.html')
     return render_template('action/jesus.html')
 
-@app.route('/action/drop/first')
+@app.route('/action/drop/first/8947')
 def first_drop():
     global first_drop
     if first_drop == 0:
         return render_template('action/done.html')
     return render_template('action/first_drop.html')
 
-@app.route('/action/drop/random')
+@app.route('/action/drop/random/4785')
 def random_drop():
     global rand_drop
     if rand_drop == 0:
         return render_template('action/done.html')
     return render_template('action/random_drop.html')
+
+@app.route('/action/bonous/get/5896')
+def get_bonus():
+    global get_bonus
+    if get_bonus == 0:
+        return render_template('action/done.html')
+    return render_template('action/get_bonus.html')
+
+@app.route('/action/bonus/drop/1885')
+def drop_bonus():
+    global drop_bonus
+    if drop_bonus == 0:
+        return render_template('action/done.html')
+    return render_template('action/drop_bonus.html')
 
 @app.route('/team_create', methods=['POST'])
 def team_post():
@@ -415,7 +429,7 @@ def drop_first():
 @app.route("/drop/random", methods=["POST"])
 def drop_random():
 
-    num = random.sample(range(1, 100), 20)
+    num = random.sample(range(1, 100), 10)
 
     for i in num:
         if len(list(db.qr_list.find({'qr_num': i}, {'_id': False}))) > 0:
@@ -424,7 +438,31 @@ def drop_random():
     global rand_drop
     rand_drop = 0
 
-    return jsonify({'msg': '점령중인 QR 중 최대 20개가 점령이 해제됩니다'})
+    return jsonify({'msg': '점령중인 QR 중 최대 10개가 점령이 해제됩니다'})
+
+@app.route("/team_bonus_get", methods=["POST"])
+def bonus_get():
+    bonus_team_receive = request.form['bonus_team_give']
+    bonus_receive = int(request.form['bonus_give'])
+
+    db.teams.update_one({'team': bonus_team_receive}, {'$inc': {'bonus': bonus_receive}})
+
+    global get_bonus
+    get_bonus = 0
+
+    return jsonify({'msg': '지급 완료'})
+
+@app.route("/team_bonus_drop", methods=["POST"])
+def bonus_drop():
+    bonus_team_receive = request.form['bonus_team_give']
+    bonus_receive = int(request.form['bonus_give'])
+
+    db.teams.update_one({'team': bonus_team_receive}, {'$inc': {'bonus': bonus_receive}})
+
+    global drop_bonus
+    drop_bonus = 0
+
+    return jsonify({'msg': '차감 완료'})
 
 @app.route("/reset/quiz", methods=["POST"])
 def reset_quiz():
@@ -433,6 +471,10 @@ def reset_quiz():
     return jsonify({'msg': 'quiz 초기화 완료'})
 
 ## QR 페이지 랜더
+
+@app.route('/qr/181451')
+def qr_00():
+    return render_template('qr/00.html')
 
 @app.route('/qr/503594')
 def qr_01():
