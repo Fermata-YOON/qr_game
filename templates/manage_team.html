@@ -21,90 +21,107 @@
     <script>
         $(document).ready(function () {
             listing();
+            team_listing()
         });
     </script>
 </head>
 
-<body class="back_color" onload="showClock()">
+<body class="back_color">
 <div>
     <h1 class="mytitle">조 관리 페이지</h1>
 </div>
-<div class="mypost" id="post-team">
-    <h3 class="mytitle">조 생성하기</h3>
-    <div class="input-group mb-3">
-        <span class="input-group-text">조이름</span>
-        <input type="text" class="form-control" id="team_name" placeholder="" aria-label="Username"
-               aria-describedby="basic-addon1">
+<div class="team_wrap">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="mypost" id="post-team">
+                <h3 class="mytitle">조 생성하기</h3>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">조이름</span>
+                    <input type="text" class="form-control" id="team_name" placeholder="" aria-label="Username"
+                           aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">색상 선택</label>
+                    <select class="form-select" id="color">
+                        <option selected>선택...</option>
+                        <option value="tomato">빨강</option>
+                        <option value="darkorange">주황</option>
+                        <option value="gold">노랑</option>
+                        <option value="lightgreen">초록</option>
+                        <option value="skyblue">파랑</option>
+                        <option value="Plum">보라</option>
+                    </select>
+                </div>
+                <div class="mybtns">
+                    <button onclick="teamCreate()" type="button" class="btn btn-dark">입력</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="mypost" id="post-member">
+                <h3 class="mytitle">조원 등록하기</h3>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">이름</span>
+                    <input type="text" class="form-control" id="name" placeholder="홍길동" aria-label="Username"
+                           aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">팀 선택</label>
+                    <select class="form-select" id="team_list">
+                        <option selected>선택...</option>
+                    </select>
+                </div>
+                <div class="mybtns">
+                    <button onclick="memberPosting()" type="button" class="btn btn-dark">입력</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="mypost" id="plus-box">
+                <h3 class="mytitle">재점령 횟수 추가하기</h3>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">조 선택</label>
+                    <select class="form-select" id="bonus_team">
+                        <option selected>선택...</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">추가 횟수 선택</label>
+                    <select class="form-select" id="bonus">
+                        <option selected>선택...</option>
+                        <option value="-7">-10</option>
+                        <option value="-7">-9</option>
+                        <option value="-7">-8</option>
+                        <option value="-7">-7</option>
+                        <option value="-6">-6</option>
+                        <option value="-5">-5</option>
+                        <option value="-4">-4</option>
+                        <option value="-3">-3</option>
+                        <option value="-2">-2</option>
+                        <option value="-1">-1</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="mybtns">
+                    <button onclick="bonusPosting()" type="button" class="btn btn-dark">입력</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text">색상 선택</label>
-        <select class="form-select" id="color">
-            <option selected>선택...</option>
-            <option value="tomato">빨강</option>
-            <option value="darkorange">주황</option>
-            <option value="gold">노랑</option>
-            <option value="lightgreen">초록</option>
-            <option value="skyblue">파랑</option>
-            <option value="Plum">보라</option>
-        </select>
+    <p></p>
+    <div class="row" id="team">
     </div>
-    <div class="mybtns">
-        <button onclick="teamCreate()" type="button" class="btn btn-dark">입력</button>
-    </div>
-</div>
-<div class="mypost" id="post-member">
-    <h3 class="mytitle">조원 등록하기</h3>
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">이름</span>
-        <input type="text" class="form-control" id="name" placeholder="홍길동" aria-label="Username"
-               aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text">팀 선택</label>
-        <select class="form-select" id="team_list">
-            <option selected>선택...</option>
-        </select>
-    </div>
-    <div class="mybtns">
-        <button onclick="memberPosting()" type="button" class="btn btn-dark">입력</button>
-    </div>
-</div>
-<div class="mypost" id="plus-box">
-    <h3 class="mytitle">재점령 횟수 추가하기</h3>
-    <div class="input-group mb-3">
-        <label class="input-group-text">조 선택</label>
-        <select class="form-select" id="bonus_team">
-            <option selected>선택...</option>
-        </select>
-    </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text">추가 횟수 선택</label>
-        <select class="form-select" id="bonus">
-            <option selected>선택...</option>
-            <option value="-7">-10</option>
-            <option value="-7">-9</option>
-            <option value="-7">-8</option>
-            <option value="-7">-7</option>
-            <option value="-6">-6</option>
-            <option value="-5">-5</option>
-            <option value="-4">-4</option>
-            <option value="-3">-3</option>
-            <option value="-2">-2</option>
-            <option value="-1">-1</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-        </select>
-    </div>
-    <div class="mybtns">
-        <button onclick="bonusPosting()" type="button" class="btn btn-dark">입력</button>
+    <p></p>
+    <div class="row" id="member">
     </div>
 </div>
 </body>

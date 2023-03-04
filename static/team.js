@@ -65,3 +65,76 @@ function bonusPosting() {
     });
 }
 
+function team_listing() {
+    $.ajax({
+        type: 'GET',
+        url: '/team/list',
+        data: {},
+        success: function (response) {
+            let rows = response['teams']
+
+            for(let i=0; i<rows.length; i++) {
+                let color = rows[i]['color']
+                let team = rows[i]['team']
+                let temp_html = ``
+
+                temp_html = `<div class="col-sm-3">
+                                <div class="card" style="max-width: 10rem;  background-color: ${color}">
+                                    <div class="card-body">
+                                        ${team}
+                                    </div>
+                                    <div>
+                                        <button onclick="del_team('${team}')" type="button" class="btn btn-outline-primary" style="background-color: lightgray">팀 삭제하기</button>                 
+                                    </div>
+                                </div>
+                             </div>`
+
+                $('#team').append(temp_html)
+
+                for(let j=0; j<rows[i]['members'].length; j++){
+                    let name = rows[i]['members'][j]
+
+                    temp_html = `<div class="col-sm-2">
+                                        <div class="card" style="max-width: 10rem;  background-color: ${color}">
+                                          <div class="card-body">
+                                            ${team} : ${name}
+                                          </div>
+                                          <div>
+                                            <button onclick="del_member('${name}', '${team}')" type="button" class="btn btn-outline-primary" style="background-color: lightgray">조원 삭제하기</button>                 
+                                          </div>
+                                        </div>
+                                      </div>`
+
+                    $('#member').append(temp_html)
+                }
+            }
+
+        }
+    })
+}
+
+function del_member(name, team) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/member/del',
+        data: {name_give: name, team_give: team},
+        success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+        }
+    });
+}
+
+function del_team(team) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/team/del',
+        data: {team_give: team},
+        success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+        }
+    });
+}

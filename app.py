@@ -101,6 +101,14 @@ def team_post():
 
         return jsonify({'msg': '기록 완료'})
 
+@app.route('/team/del', methods=['POST'])
+def team_del():
+    team_receive = request.form['team_give']
+
+    db.teams.delete_one({'team': team_receive})
+
+    return jsonify({'msg': '삭제 완료'})
+
 @app.route("/member_post", methods=["POST"])
 def member_post():
     name_receive = request.form['name_give']
@@ -121,6 +129,14 @@ def member_post():
 
             return jsonify({'msg': '기록 완료'})
 
+@app.route("/member/del", methods=["POST"])
+def del_member():
+    team_receive = request.form['team_give']
+    name_receive = request.form['name_give']
+
+    db.teams.update_one({'team': team_receive}, {'$pull': {'members': name_receive}})
+
+    return jsonify({'msg': '삭제완료'})
 
 @app.route("/team_bonus_record", methods=["POST"])
 def bonus_post():
